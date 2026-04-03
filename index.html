@@ -387,6 +387,9 @@
       <!-- ── Verdict Banner ── -->
       <div id="verdict-banner" role="status" aria-live="polite"></div>
 
+      <!-- ── Cash Flow Timeline ── -->
+      <div id="cashflow-section" style="display:none; margin-top: 1.5rem;"></div>
+
     </div><!-- /results -->
   </main>
 
@@ -511,7 +514,57 @@
           </div>
         </div>
 
-        <!-- FAQ 4 -->
+        <!-- FAQ 4: Withholding — where does money go -->
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-4b-content">
+            <span>10% khấu trừ tại nguồn — Tiền của bạn đi đâu?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-content" id="faq-4b-content" role="region">
+            <div class="faq-body">
+              <p><strong>Tình huống thực tế:</strong> Bạn vẽ xong 1 project cho NXB, invoice 50 triệu.</p>
+              <div style="margin:0.75rem 0;padding:0.75rem;background:#fef2f2;border-left:3px solid #f87171;border-radius:0.5rem;">
+                <strong>❌ Không có HKD:</strong><br>
+                NXB giữ lại 5 triệu (10%), chuyển cho bạn 45 triệu. 5 triệu đó NXB nộp cho cơ quan thuế thay bạn.<br>
+                Muốn lấy lại? Chờ đến tháng 4 năm sau, làm hồ sơ quyết toán, chờ thêm 6–40 ngày. Có khi cả năm mới nhận lại được.
+              </div>
+              <div style="margin:0.75rem 0;padding:0.75rem;background:#f0fdf4;border-left:3px solid #4ade80;border-radius:0.5rem;">
+                <strong>✅ Có HKD:</strong><br>
+                Bạn xuất hóa đơn 50 triệu cho NXB. NXB chuyển FULL 50 triệu cho bạn.<br>
+                Cuối quý, bạn tự kê khai và nộp thuế: Thuế TNCN (2%) + Thuế GTGT (5%) = chỉ trên phần vượt ngưỡng 500tr.<br>
+                Tiền luôn nằm trong tay bạn, bạn chủ động nộp đúng số cần nộp.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 5: No BHXH for freelancers -->
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-5b-content">
+            <span>Freelancer không đóng BHXH — ảnh hưởng gì đến thuế?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-content" id="faq-5b-content" role="region">
+            <div class="faq-body">
+              <p>Nếu bạn là <strong>freelancer thuần túy</strong> (không có Hợp đồng lao động từ đủ 1 tháng):</p>
+              <ul style="list-style:disc;padding-left:1.25rem;margin:0.5rem 0;line-height:2.1;">
+                <li>Không đóng BHXH bắt buộc → <strong>không được trừ BHXH</strong> khi tính thuế</li>
+                <li>Thu nhập tính thuế = Thu nhập − Giảm trừ gia cảnh <em>(không có BHXH)</em></li>
+                <li>Tức là thuế bạn phải đóng <strong>cao hơn</strong> một người cùng mức lương nhưng có HĐLĐ</li>
+              </ul>
+              <p>Nếu bạn vừa đi làm fulltime vừa nhận freelance:</p>
+              <ul style="list-style:disc;padding-left:1.25rem;margin:0.5rem 0;line-height:2.1;">
+                <li>BHXH chỉ đóng và chỉ được trừ trên <strong>phần lương fulltime</strong></li>
+                <li>Phần freelance <strong>không được trừ</strong> thêm BHXH</li>
+              </ul>
+              <p style="font-size:0.8125rem;color:rgba(26,31,54,0.5);margin-top:0.5rem;">
+                <em>Căn cứ pháp lý: Khoản 1 Điều 2 Luật BHXH 2014 — BHXH bắt buộc chỉ áp dụng đối với người lao động làm việc theo hợp đồng lao động từ đủ 01 tháng trở lên.</em>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ (original) 4 -->
         <div class="faq-item">
           <button
             class="faq-trigger"

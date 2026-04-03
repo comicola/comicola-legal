@@ -558,6 +558,248 @@ body {
   color: var(--color-gold);
 }
 
+/* ─── Cash Flow Timeline ─────────────────────────────────────────────────── */
+
+#cashflow-section {
+  border-top: 2px dashed var(--color-border);
+  padding-top: 1.5rem;
+}
+
+.cf-header {
+  margin-bottom: 1rem;
+}
+
+.cf-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0 0 0.25rem;
+}
+
+.cf-subtitle-text {
+  font-size: 0.8125rem;
+  color: rgba(26, 31, 54, 0.55);
+}
+
+/* Mode 2 note about salary being omitted from the section */
+.cf-mode2-note {
+  font-size: 0.75rem;
+  color: rgba(26, 31, 54, 0.45);
+  background: var(--color-paper);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  margin-bottom: 0.875rem;
+  display: inline-block;
+}
+
+/* Two-column grid — stacked on mobile, side-by-side on wider screens */
+.cf-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 600px) {
+  .cf-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Individual timeline card */
+.cf-card {
+  border-radius: 1rem;
+  border: 2px solid var(--color-border);
+  overflow: hidden;
+  background: white;
+}
+
+.cf-card--noHKD {
+  border-color: #fca5a5;
+}
+
+.cf-card--HKD {
+  border-color: rgba(245, 166, 35, 0.5);
+}
+
+/* Card header label */
+.cf-card-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  background: var(--color-paper);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-navy);
+}
+
+.cf-card--noHKD .cf-card-label {
+  background: #fef2f2;
+  border-bottom-color: #fca5a5;
+}
+
+.cf-card--HKD .cf-card-label {
+  background: rgba(245, 166, 35, 0.07);
+  border-bottom-color: rgba(245, 166, 35, 0.35);
+}
+
+.cf-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cf-dot--red  { background-color: #ef4444; }
+.cf-dot--gold { background-color: var(--color-gold); }
+
+/* Quarter rows */
+.cf-timeline {
+  padding: 0.5rem 0;
+}
+
+.cf-qrow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 0.375rem 0.875rem;
+  border-bottom: 1px dashed rgba(26, 31, 54, 0.07);
+}
+
+.cf-qrow:last-child {
+  border-bottom: none;
+}
+
+.cf-finalization {
+  background: rgba(26, 31, 54, 0.02);
+}
+
+.cf-qlabel {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(26, 31, 54, 0.4);
+}
+
+.cf-qamounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: center;
+}
+
+/* Money colours */
+.cf-inflow {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #059669;
+  font-variant-numeric: tabular-nums;
+}
+
+.cf-outflow {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cf-withheld {
+  color: #ef4444;
+}
+
+.cf-tax {
+  color: #b45309;
+}
+
+.cf-owe {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.cf-refund {
+  color: #059669;
+  font-weight: 700;
+}
+
+.cf-exempt-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #059669;
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  border-radius: 9999px;
+  padding: 0.1rem 0.5rem;
+}
+
+/* Card summary totals */
+.cf-card-total {
+  border-top: 2px solid rgba(26, 31, 54, 0.1);
+  padding: 0.625rem 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cf-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: rgba(26, 31, 54, 0.65);
+}
+
+.cf-total-row span:last-child {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.cf-total-final {
+  border-top: 1px solid rgba(26, 31, 54, 0.1);
+  margin-top: 0.25rem;
+  padding-top: 0.375rem;
+  font-weight: 700;
+  color: var(--color-navy) !important;
+}
+
+.cf-total-final span {
+  font-weight: 700 !important;
+  color: var(--color-navy) !important;
+}
+
+/* Cash flow advantage callout */
+.cf-advantage {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(245, 166, 35, 0.08);
+  border: 2px solid rgba(245, 166, 35, 0.35);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.cf-advantage-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.cf-advantage p {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.cf-advantage p strong {
+  color: var(--color-gold);
+}
+
 /* ─── Utilities ───────────────────────────────────────────────────────────── */
 .visually-hidden {
   position: absolute;

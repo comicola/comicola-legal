@@ -66,7 +66,8 @@ const hkdEffRate    = document.getElementById('hkd-effective-rate');
 const hkdWinnerBadge = document.getElementById('hkd-winner-badge');
 const hkdTotalRow   = document.getElementById('hkd-total-row');
 const hkdWarning    = document.getElementById('hkd-warning');
-const verdictBanner = document.getElementById('verdict-banner');
+const verdictBanner    = document.getElementById('verdict-banner');
+const cashflowSection  = document.getElementById('cashflow-section');
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
 
@@ -176,7 +177,13 @@ function renderMode1() {
   pitNetLabel.textContent  = 'Thu nhập thực nhận';
   pitDetails.innerHTML = '';
   pitDetails.appendChild(makeDetailRow('Thu nhập tháng', pit.monthlyGross));
-  pitDetails.appendChild(makeDetailRow('BHXH + BHYT + BHTN (10,5%)', pit.bhxhMonthly, 'deduction', true));
+
+  // BHXH note — freelancers have no HĐLĐ, so no BHXH deduction applies
+  const bhxhNote = document.createElement('p');
+  bhxhNote.style.cssText = 'font-size:0.75rem;color:rgba(26,31,54,0.5);line-height:1.5;padding:0.25rem 0;';
+  bhxhNote.textContent = 'ℹ️ Freelancer không có HĐLĐ → không đóng BHXH bắt buộc, không được trừ BHXH khi tính thuế';
+  pitDetails.appendChild(bhxhNote);
+
   pitDetails.appendChild(makeDetailRow('Giảm trừ bản thân', pit.personalDeduction, 'deduction', true));
   if (numberOfDependents > 0) {
     pitDetails.appendChild(makeDetailRow(
@@ -192,7 +199,7 @@ function renderMode1() {
   pitEffRate.textContent   = pit.effectiveRate.toFixed(1) + '%';
   applyWinnerState(cardPit, pitWinnerBadge, pitTotalRow, winner === 'pit');
 
-  // ── Card B: HKD ───────────────────────────────────────────────────────────
+  // ── Card B: HKD ─────────────────────────────────────────────────────────
   cardHkdTitle.textContent = 'Thành lập Hộ Kinh Doanh';
   hkdNetLabel.textContent  = 'Thu nhập sau thuế';
   hkdDetails.innerHTML = '';
@@ -255,6 +262,20 @@ function renderMode1() {
       <p style="font-size:1.5rem;font-weight:800;color:var(--color-navy);margin:0.25rem 0;">${formatVND(savings)}/năm</p>
       <p style="font-size:0.875rem;color:rgba(26,31,54,0.65);">so với thành lập Hộ Kinh Doanh</p>`;
   }
+
+  // ── Cash Flow Timeline ────────────────────────────────────────────────────
+  const totalWithheld = annualRevenue * 0.10;
+  renderCashFlow({
+    mode: 'mode1',
+    freelanceRevenue: annualRevenue,
+    totalWithheld,
+    actualTaxNoHKD: pit.annualTax,
+    refundOrOwe:    totalWithheld - pit.annualTax,
+    totalHKDTax:    hkd.totalTax,
+    hkdPIT:         hkd.hkdPIT,
+    hkdVAT:         hkd.hkdVAT,
+    isExempt:       hkd.isExempt,
+  });
 }
 
 // ─── RENDER: MODE 2 (fulltime salary + freelance) ────────────────────────────
@@ -426,6 +447,196 @@ function renderMode2() {
         Hãy cân nhắc thêm chi phí và thủ tục hành chính khi lập HKD.
       </p>`;
   }
+
+  // ── Cash Flow Timeline (freelance portion only) ───────────────────────────
+  renderCashFlow({
+    mode: 'mode2',
+    freelanceRevenue: annualFreelance,
+    totalWithheld:   colA.withheld10Pct,
+    actualTaxNoHKD:  colA.taxOnFreelance,
+    refundOrOwe:     colA.refundOrOwed,
+    totalHKDTax:     colB.totalHKDTax,
+    hkdPIT:          colB.hkdPIT,
+    hkdVAT:          colB.hkdVAT,
+    isExempt:        colB.isExempt,
+  });
+}
+
+// ─── CASH FLOW TIMELINE ──────────────────────────────────────────────────────
+
+/**
+ * Render the cash flow timeline section.
+ *
+ * @param {object} p
+ *   mode             - 'mode1' | 'mode2'
+ *   freelanceRevenue - annual freelance income (Mode 1: total; Mode 2: freelance portion)
+ *   totalWithheld    - 10% of freelanceRevenue (what clients keep)
+ *   actualTaxNoHKD   - actual PIT on freelance income (Mode 1: pit.annualTax; Mode 2: colA.taxOnFreelance)
+ *   refundOrOwe      - totalWithheld − actualTaxNoHKD (positive = refund, negative = owe more)
+ *   totalHKDTax      - total HKD tax (PIT 2% + VAT 5%)
+ *   hkdPIT           - HKD PIT component
+ *   hkdVAT           - HKD VAT component
+ *   isExempt         - freelanceRevenue ≤ 500M
+ */
+function renderCashFlow(p) {
+  if (p.freelanceRevenue <= 0) {
+    cashflowSection.style.display = 'none';
+    return;
+  }
+
+  cashflowSection.style.display = '';
+
+  const qRev        = p.freelanceRevenue / 4;
+  const qWithheld   = qRev * 0.10;
+  const qReceived_A = qRev * 0.90;
+  const qTax_HKD    = p.totalHKDTax / 4;
+  const refundPos   = p.refundOrOwe >= 0;
+  const refundAbs   = Math.abs(p.refundOrOwe);
+
+  // Cash flow advantage: how much MORE cash HKD artist has access to during the year
+  // = total withheld (not taken) − HKD taxes paid throughout year
+  const cfAdvantage = p.totalWithheld - p.totalHKDTax;
+
+  const QUARTERS = [
+    { label: 'Q1 — Tháng 1-3',   deadline: '30/4/2026' },
+    { label: 'Q2 — Tháng 4-6',   deadline: '31/7/2026' },
+    { label: 'Q3 — Tháng 7-9',   deadline: '31/10/2026' },
+    { label: 'Q4 — Tháng 10-12', deadline: '31/1/2027' },
+  ];
+
+  // ── Card A: No HKD rows ───────────────────────────────────────────────────
+  const rowsA = QUARTERS.map(q => `
+    <div class="cf-qrow">
+      <span class="cf-qlabel">${q.label}</span>
+      <div class="cf-qamounts">
+        <span class="cf-inflow">+${formatVND(qReceived_A)}</span>
+        <span class="cf-outflow cf-withheld">−${formatVND(qWithheld)} bị giữ lại</span>
+      </div>
+    </div>`).join('');
+
+  const finalizationRow = `
+    <div class="cf-qrow cf-finalization">
+      <span class="cf-qlabel">Tháng 4/2027 — Quyết toán thuế</span>
+      <div class="cf-qamounts">
+        <span class="${refundPos ? 'cf-refund' : 'cf-owe'}">
+          ${refundPos
+            ? `+${formatVND(refundAbs)} hoàn thuế (chờ 6–40 ngày)`
+            : `−${formatVND(refundAbs)} phải nộp thêm (!)`}
+        </span>
+      </div>
+    </div>`;
+
+  const netA = p.freelanceRevenue - p.actualTaxNoHKD;
+
+  // ── Card B: HKD rows ──────────────────────────────────────────────────────
+  const rowsB = QUARTERS.map(q => `
+    <div class="cf-qrow">
+      <span class="cf-qlabel">${q.label}</span>
+      <div class="cf-qamounts">
+        <span class="cf-inflow">+${formatVND(qRev)} (nhận full)</span>
+        ${p.isExempt
+          ? '<span class="cf-exempt-tag">✓ Không nộp thuế</span>'
+          : `<span class="cf-outflow cf-tax">−${formatVND(qTax_HKD)} thuế (trước ${q.deadline})</span>`}
+      </div>
+    </div>`).join('');
+
+  const netB = p.freelanceRevenue - p.totalHKDTax;
+
+  // ── Advantage callout text ────────────────────────────────────────────────
+  let advantageHtml = '';
+  if (p.isExempt) {
+    advantageHtml = `
+      <div class="cf-advantage">
+        <span class="cf-advantage-icon">✨</span>
+        <p>Với HKD, bạn <strong>không bị khấu trừ ${formatVND(p.totalWithheld)}</strong> trong năm.
+        Toàn bộ tiền nằm trong tay bạn — không cần chờ hoàn thuế.</p>
+      </div>`;
+  } else if (cfAdvantage > 0) {
+    advantageHtml = `
+      <div class="cf-advantage">
+        <span class="cf-advantage-icon">⚡</span>
+        <p>Với HKD, bạn có thêm <strong>${formatVND(cfAdvantage)}</strong> xoay vòng trong năm,
+        thay vì bị giữ lại và phải chờ hoàn thuế vào tháng 4 năm sau.</p>
+      </div>`;
+  } else if (!refundPos) {
+    // No HKD case where artist owes more at finalization — extra powerful
+    advantageHtml = `
+      <div class="cf-advantage">
+        <span class="cf-advantage-icon">⚠️</span>
+        <p>Không có HKD: bạn bị giữ <strong>${formatVND(p.totalWithheld)}</strong> trong năm,
+        rồi còn phải <strong>nộp thêm ${formatVND(refundAbs)}</strong> lúc quyết toán vì thu nhập
+        cộng dồn đẩy vào bậc thuế cao hơn. HKD giúp bạn tránh hoàn toàn tình huống này.</p>
+      </div>`;
+  }
+
+  const mode2Note = p.mode === 'mode2'
+    ? '<p class="cf-mode2-note">📌 Chỉ hiển thị phần freelance — dòng tiền lương fulltime giống nhau ở cả hai phương án</p>'
+    : '';
+
+  cashflowSection.innerHTML = `
+    <div class="cf-header">
+      <h3 class="cf-title font-display">💸 So sánh dòng tiền thực tế trong năm</h3>
+      <p class="cf-subtitle-text">Tiền của bạn vào — ra như thế nào trong suốt năm 2026${p.mode === 'mode2' ? ' (phần thu nhập freelance)' : ''}</p>
+    </div>
+    ${mode2Note}
+    <div class="cf-grid">
+
+      <div class="cf-card cf-card--noHKD">
+        <div class="cf-card-label">
+          <span class="cf-dot cf-dot--red"></span>
+          Không có HKD — Bị khấu trừ 10%
+        </div>
+        <div class="cf-timeline">
+          ${rowsA}
+          ${finalizationRow}
+        </div>
+        <div class="cf-card-total">
+          <div class="cf-total-row">
+            <span>Nhận trong 2026</span>
+            <span class="cf-inflow">${formatVND(p.freelanceRevenue - p.totalWithheld)}</span>
+          </div>
+          <div class="cf-total-row">
+            <span>${refundPos ? 'Hoàn thuế (Apr 2027)' : 'Nộp thêm (Apr 2027)'}</span>
+            <span class="${refundPos ? 'cf-refund' : 'cf-owe'}">${refundPos ? '+' : '−'}${formatVND(refundAbs)}</span>
+          </div>
+          <div class="cf-total-row cf-total-final">
+            <span>Ròng sau tất cả</span>
+            <span>${formatVND(netA)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cf-card cf-card--HKD">
+        <div class="cf-card-label">
+          <span class="cf-dot cf-dot--gold"></span>
+          Có HKD — Nhận full, đóng sau
+        </div>
+        <div class="cf-timeline">
+          ${rowsB}
+        </div>
+        <div class="cf-card-total">
+          <div class="cf-total-row">
+            <span>Nhận trong 2026</span>
+            <span class="cf-inflow">${formatVND(p.freelanceRevenue)}</span>
+          </div>
+          <div class="cf-total-row">
+            <span>Tổng thuế HKD cả năm</span>
+            <span class="cf-outflow cf-tax">${p.isExempt ? '0 ₫' : '−' + formatVND(p.totalHKDTax)}</span>
+          </div>
+          ${!p.isExempt ? `
+          <div class="cf-total-row" style="font-size:0.75rem;opacity:0.7;">
+            <span>Trong đó: TNCN 2% + GTGT 5%</span>
+            <span>${formatVND(p.hkdPIT)} + ${formatVND(p.hkdVAT)}</span>
+          </div>` : ''}
+          <div class="cf-total-row cf-total-final">
+            <span>Ròng sau tất cả</span>
+            <span>${formatVND(netB)}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    ${advantageHtml}`;
 }
 
 // ─── MAIN RENDER DISPATCHER ───────────────────────────────────────────────────

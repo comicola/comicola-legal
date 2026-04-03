@@ -87,33 +87,33 @@ export function calculatePIT(annualRevenue, numberOfDependents) {
   // Step 1: Monthly gross income
   const monthlyGross = annualRevenue / 12;
 
-  // Step 2: BHXH deduction (capped at 46.8M/month)
-  const bhxhBase = Math.min(monthlyGross, BHXH_CAP);
-  const bhxhMonthly = bhxhBase * BHXH_RATE;
-  const bhxhAnnual = bhxhMonthly * 12;
+  // Step 2: BHXH — pure freelancers have NO mandatory BHXH
+  // Khoản 1 Điều 2 Luật BHXH 2014: BHXH bắt buộc chỉ áp dụng cho người có HĐLĐ từ đủ 1 tháng.
+  // Hợp đồng dịch vụ / hợp đồng khoán việc KHÔNG phải HĐLĐ → không đóng, không được trừ.
+  const bhxhMonthly = 0;
+  const bhxhAnnual  = 0;
 
   // Step 3: Personal + dependent deductions
   const dependentDeductionTotal = DEPENDENT_DEDUCTION * numberOfDependents;
   const totalMonthlyDeduction = PERSONAL_DEDUCTION + dependentDeductionTotal;
 
-  // Step 4: Monthly taxable income
-  const taxableMonthly = Math.max(0, monthlyGross - bhxhMonthly - totalMonthlyDeduction);
+  // Step 4: Monthly taxable income (no BHXH subtracted for freelancers)
+  const taxableMonthly = Math.max(0, monthlyGross - totalMonthlyDeduction);
 
   // Step 5: Apply progressive tax brackets
   const monthlyTax = calculateProgressiveTax(taxableMonthly);
-  const annualTax = monthlyTax * 12;
+  const annualTax  = monthlyTax * 12;
 
-  // Net income: revenue minus BHXH minus PIT
-  const netIncome = annualRevenue - bhxhAnnual - annualTax;
+  // Net income after PIT (no BHXH for freelancers)
+  const netIncome = annualRevenue - annualTax;
 
-  // Effective tax rate (PIT only, not counting BHXH)
+  // Effective tax rate
   const effectiveRate = annualRevenue > 0 ? (annualTax / annualRevenue) * 100 : 0;
 
   return {
     monthlyGross,
-    bhxhBase,
-    bhxhMonthly,
-    bhxhAnnual,
+    bhxhMonthly,   // always 0 for pure freelancers
+    bhxhAnnual,    // always 0 for pure freelancers
     personalDeduction: PERSONAL_DEDUCTION,
     dependentDeductionTotal,
     totalMonthlyDeduction,
