@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="So sánh thuế TNCN cá nhân và Hộ Kinh Doanh cho họa sĩ tự do — cập nhật 2026" />
+  <title>Comicola Legal — So sánh thuế cho họa sĩ tự do</title>
+
+  <!-- Google Fonts: Be Vietnam Pro (Vietnamese-optimised body) + Playfair Display (editorial headings) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <script type="module" crossorigin src="/assets/index-DoUuMcyi.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Dsraezbt.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════ HEADER ══════ -->
+  <header style="background-color: var(--color-navy); color: white; padding: 2.5rem 1rem 2rem;">
+    <div style="max-width: 640px; margin: 0 auto; text-align: center;">
+      <!-- Logo -->
+      <div
+        class="font-display"
+        style="font-size: 2rem; font-weight: 700; color: var(--color-gold); letter-spacing: -0.01em; margin-bottom: 0.5rem;"
+        aria-label="Comicola Legal"
+      >
+        Comicola Legal
+      </div>
+
+      <!-- Tagline -->
+      <p style="font-size: 1.0625rem; font-weight: 600; opacity: 0.92; margin-bottom: 0.375rem;">
+        Công cụ so sánh thuế dành cho họa sĩ tự do
+      </p>
+
+      <!-- Subtitle -->
+      <p style="font-size: 0.8125rem; opacity: 0.55; line-height: 1.5;">
+        Cập nhật theo Luật Thuế TNCN 2025 &amp; Nghị định 68/2026/NĐ-CP
+      </p>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════ INPUT SECTION ══ -->
+  <section
+    id="input-section"
+    style="
+      padding: 1rem;
+      background-color: var(--color-paper);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: 0 2px 8px rgba(26,31,54,0.07);
+    "
+  >
+    <div style="max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+
+      <!-- ── Compact summary bar (Mode 1 only, shown when scrolled down) ── -->
+      <div
+        id="compact-bar"
+        style="display: none;"
+        aria-label="Thông tin đang tính"
+        role="button"
+        tabindex="0"
+        aria-expanded="false"
+      >
+        <div id="compact-revenue" class="compact-value">—</div>
+        <div id="compact-meta" class="compact-meta"></div>
+        <div class="compact-edit" aria-hidden="true">✏️ Sửa</div>
+      </div>
+
+      <!-- ── Mode toggle ── -->
+      <div
+        class="mode-toggle"
+        role="tablist"
+        aria-label="Chọn chế độ tính thuế"
+      >
+        <button
+          id="mode-btn-1"
+          class="mode-btn active"
+          role="tab"
+          aria-selected="true"
+          aria-controls="mode1-inputs"
+          data-mode="mode1"
+        >
+          Chỉ Freelance
+        </button>
+        <button
+          id="mode-btn-2"
+          class="mode-btn"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode2-inputs"
+          data-mode="mode2"
+        >
+          💼 Fulltime + Freelance
+        </button>
+      </div>
+
+      <!-- ── Mode 1: Freelance only (existing) ── -->
+      <div id="mode1-inputs">
+        <label
+          for="revenue-input"
+          style="display: block; font-size: 0.875rem; font-weight: 700; color: var(--color-navy); margin-bottom: 0.375rem;"
+        >
+          Doanh thu dự kiến năm 2026
+        </label>
+
+        <div style="position: relative;">
+          <input
+            type="text"
+            id="revenue-input"
+            inputmode="numeric"
+            placeholder="Ví dụ: 600.000.000"
+            autocomplete="off"
+            class="revenue-input"
+            aria-label="Doanh thu dự kiến năm 2026"
+            style="
+              width: 100%; box-sizing: border-box;
+              padding: 0.75rem 3rem 0.75rem 1rem;
+              font-size: 1.125rem; font-weight: 600;
+              font-family: var(--font-body);
+            "
+          />
+          <span
+            aria-hidden="true"
+            style="
+              position: absolute; right: 1rem; top: 50%;
+              transform: translateY(-50%);
+              font-size: 1rem; font-weight: 500;
+              color: rgba(26,31,54,0.35);
+              pointer-events: none;
+            "
+          >₫</span>
+        </div>
+
+        <!-- Quick-pick buttons (annual revenue) -->
+        <div
+          style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.625rem;"
+          role="group"
+          aria-label="Chọn nhanh mức doanh thu"
+        >
+          <button class="quick-pick" data-target="revenue" data-value="300000000">300 tr</button>
+          <button class="quick-pick" data-target="revenue" data-value="500000000">500 tr</button>
+          <button class="quick-pick" data-target="revenue" data-value="800000000">800 tr</button>
+          <button class="quick-pick" data-target="revenue" data-value="1000000000">1 tỷ</button>
+          <button class="quick-pick" data-target="revenue" data-value="1500000000">1,5 tỷ</button>
+          <button class="quick-pick" data-target="revenue" data-value="2000000000">2 tỷ</button>
+        </div>
+      </div>
+
+      <!-- ── Mode 2: Fulltime + Freelance ── -->
+      <div id="mode2-inputs" style="display: none; flex-direction: column; gap: 1rem;">
+
+        <!-- Fulltime salary -->
+        <div>
+          <label
+            for="salary-input"
+            style="display: block; font-size: 0.875rem; font-weight: 700; color: var(--color-navy); margin-bottom: 0.25rem;"
+          >
+            💼 Lương Fulltime <span style="font-weight:400;color:rgba(26,31,54,0.55);">(gross/tháng)</span>
+          </label>
+          <p style="font-size: 0.75rem; color: rgba(26,31,54,0.5); margin-bottom: 0.375rem; line-height: 1.4;">
+            Lương trước thuế tại công ty chính, nơi bạn đóng BHXH
+          </p>
+          <div style="position: relative;">
+            <input
+              type="text"
+              id="salary-input"
+              inputmode="numeric"
+              placeholder="Ví dụ: 25.000.000"
+              autocomplete="off"
+              class="revenue-input"
+              aria-label="Lương fulltime gross mỗi tháng"
+              style="
+                width: 100%; box-sizing: border-box;
+                padding: 0.75rem 3rem 0.75rem 1rem;
+                font-size: 1.125rem; font-weight: 600;
+                font-family: var(--font-body);
+              "
+            />
+            <span aria-hidden="true" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-size:1rem;font-weight:500;color:rgba(26,31,54,0.35);pointer-events:none;">₫</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;" role="group" aria-label="Chọn nhanh mức lương tháng">
+            <button class="quick-pick" data-target="salary" data-value="15000000">15 tr</button>
+            <button class="quick-pick" data-target="salary" data-value="20000000">20 tr</button>
+            <button class="quick-pick" data-target="salary" data-value="25000000">25 tr</button>
+            <button class="quick-pick" data-target="salary" data-value="30000000">30 tr</button>
+            <button class="quick-pick" data-target="salary" data-value="40000000">40 tr</button>
+            <button class="quick-pick" data-target="salary" data-value="50000000">50 tr</button>
+          </div>
+        </div>
+
+        <!-- Freelance income -->
+        <div>
+          <label
+            for="freelance-input"
+            style="display: block; font-size: 0.875rem; font-weight: 700; color: var(--color-navy); margin-bottom: 0.25rem;"
+          >
+            🎨 Thu nhập Freelance <span style="font-weight:400;color:rgba(26,31,54,0.55);">(cả năm 2026)</span>
+          </label>
+          <p style="font-size: 0.75rem; color: rgba(26,31,54,0.5); margin-bottom: 0.375rem; line-height: 1.4;">
+            Tổng tiền nhận từ vẽ minh hoạ bên ngoài, hợp đồng dịch vụ, project freelance
+          </p>
+          <div style="position: relative;">
+            <input
+              type="text"
+              id="freelance-input"
+              inputmode="numeric"
+              placeholder="Ví dụ: 600.000.000"
+              autocomplete="off"
+              class="revenue-input"
+              aria-label="Thu nhập freelance cả năm"
+              style="
+                width: 100%; box-sizing: border-box;
+                padding: 0.75rem 3rem 0.75rem 1rem;
+                font-size: 1.125rem; font-weight: 600;
+                font-family: var(--font-body);
+              "
+            />
+            <span aria-hidden="true" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-size:1rem;font-weight:500;color:rgba(26,31,54,0.35);pointer-events:none;">₫</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;" role="group" aria-label="Chọn nhanh thu nhập freelance">
+            <button class="quick-pick" data-target="freelance" data-value="200000000">200 tr</button>
+            <button class="quick-pick" data-target="freelance" data-value="400000000">400 tr</button>
+            <button class="quick-pick" data-target="freelance" data-value="600000000">600 tr</button>
+            <button class="quick-pick" data-target="freelance" data-value="800000000">800 tr</button>
+            <button class="quick-pick" data-target="freelance" data-value="1000000000">1 tỷ</button>
+            <button class="quick-pick" data-target="freelance" data-value="1500000000">1,5 tỷ</button>
+          </div>
+        </div>
+
+      </div><!-- /mode2-inputs -->
+
+      <!-- Dependents stepper -->
+      <div id="dep-row">
+        <label
+          id="dep-label"
+          style="display: block; font-size: 0.875rem; font-weight: 700; color: var(--color-navy); margin-bottom: 0.375rem;"
+        >
+          Số người phụ thuộc
+        </label>
+
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="stepper" role="group" aria-labelledby="dep-label">
+            <button
+              id="dep-minus"
+              class="stepper-btn"
+              aria-label="Giảm số người phụ thuộc"
+              disabled
+            >−</button>
+            <span
+              id="dep-count"
+              class="stepper-value"
+              aria-live="polite"
+              aria-label="Số người phụ thuộc hiện tại"
+            >0</span>
+            <button
+              id="dep-plus"
+              class="stepper-btn"
+              aria-label="Tăng số người phụ thuộc"
+            >+</button>
+          </div>
+
+          <p style="font-size: 0.75rem; color: rgba(26,31,54,0.55); line-height: 1.5; flex: 1;">
+            Con dưới 18 tuổi, con đang đi học, cha mẹ hết tuổi lao động...
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ RESULTS AREA ══ -->
+  <main
+    id="main-content"
+    style="padding: 1.5rem 1rem 2rem; max-width: 640px; margin: 0 auto;"
+    aria-live="polite"
+    aria-label="Kết quả so sánh thuế"
+  >
+
+    <!-- Empty state -->
+    <div
+      id="empty-state"
+      style="text-align: center; padding: 4rem 1rem; color: rgba(26,31,54,0.35);"
+    >
+      <div style="font-size: 3.5rem; margin-bottom: 1rem;">📊</div>
+      <p style="font-size: 1.0625rem; font-weight: 600;">Nhập doanh thu để xem kết quả so sánh</p>
+      <p style="font-size: 0.875rem; margin-top: 0.5rem; opacity: 0.8;">Tính toán tức thì, hoàn toàn offline</p>
+    </div>
+
+    <!-- Results (hidden until data is entered) -->
+    <div id="results" style="display: none;">
+
+      <!-- Two cards: PIT + HKD -->
+      <div class="cards-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem;">
+
+        <!-- ── Card A: Personal Income Tax ── -->
+        <div
+          id="card-pit"
+          class="result-card"
+          role="region"
+          aria-label="Phương án đóng thuế TNCN cá nhân"
+        >
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.625rem;">
+              <div style="width: 12px; height: 12px; border-radius: 50%; background-color: var(--color-navy); flex-shrink: 0;"></div>
+              <h2
+                id="card-pit-title"
+                class="font-display"
+                style="font-size: 1.0625rem; font-weight: 700; color: var(--color-navy); line-height: 1.3;"
+              >
+                Đóng thuế TNCN cá nhân
+              </h2>
+            </div>
+            <span id="pit-winner-badge" style="display: none;" class="winner-badge">🏆 Tiết kiệm hơn</span>
+          </div>
+
+          <!-- Breakdown rows — filled by JS -->
+          <div id="pit-details" class="detail-rows"></div>
+
+          <!-- Summary totals -->
+          <div class="card-total">
+            <div class="total-row" id="pit-total-row">
+              <span class="total-label">Tổng thuế năm</span>
+              <span id="pit-total-tax" class="total-value">—</span>
+            </div>
+            <div class="meta-row">
+              <span id="pit-net-label" class="meta-label">Thu nhập thực nhận</span>
+              <span id="pit-net-income" class="meta-value">—</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">Thuế suất thực tế</span>
+              <span id="pit-effective-rate" class="meta-value">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Card B: Household Business ── -->
+        <div
+          id="card-hkd"
+          class="result-card"
+          role="region"
+          aria-label="Phương án thành lập Hộ Kinh Doanh"
+        >
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.625rem;">
+              <div style="width: 12px; height: 12px; border-radius: 50%; background-color: var(--color-gold); flex-shrink: 0;"></div>
+              <h2
+                id="card-hkd-title"
+                class="font-display"
+                style="font-size: 1.0625rem; font-weight: 700; color: var(--color-navy); line-height: 1.3;"
+              >
+                Thành lập Hộ Kinh Doanh
+              </h2>
+            </div>
+            <span id="hkd-winner-badge" style="display: none;" class="winner-badge">🏆 Tiết kiệm hơn</span>
+          </div>
+
+          <!-- Breakdown rows — filled by JS -->
+          <div id="hkd-details" class="detail-rows"></div>
+
+          <!-- Summary totals -->
+          <div class="card-total">
+            <div class="total-row" id="hkd-total-row">
+              <span class="total-label">Tổng thuế năm</span>
+              <span id="hkd-total-tax" class="total-value">—</span>
+            </div>
+            <div class="meta-row">
+              <span id="hkd-net-label" class="meta-label">Thu nhập sau thuế</span>
+              <span id="hkd-net-income" class="meta-value">—</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">Thuế suất thực tế</span>
+              <span id="hkd-effective-rate" class="meta-value">—</span>
+            </div>
+          </div>
+
+          <!-- Warning for >3B revenue -->
+          <div id="hkd-warning" class="hkd-warning" style="display: none;">
+            ⚠️ Với doanh thu trên 3 tỷ, bạn bắt buộc phải tính thuế TNCN theo phương pháp thu nhập
+            (doanh thu − chi phí). Công cụ này sử dụng phương pháp tỷ lệ % để tham khảo.
+          </div>
+        </div>
+
+      </div><!-- /cards-grid -->
+
+      <!-- ── Verdict Banner ── -->
+      <div id="verdict-banner" role="status" aria-live="polite"></div>
+
+    </div><!-- /results -->
+  </main>
+
+  <!-- ════════════════════════════════════════════════ EDUCATIONAL SECTION ══ -->
+  <section
+    style="
+      background: white;
+      border-top: 1px solid var(--color-border);
+      padding: 2.5rem 1rem;
+    "
+  >
+    <div style="max-width: 640px; margin: 0 auto;">
+      <h2
+        class="font-display"
+        style="font-size: 1.5rem; font-weight: 700; color: var(--color-navy); margin-bottom: 1.5rem;"
+      >
+        Tìm hiểu thêm
+      </h2>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="faq-list">
+
+        <!-- FAQ 1 -->
+        <div class="faq-item">
+          <button
+            class="faq-trigger"
+            aria-expanded="false"
+            aria-controls="faq-1-content"
+          >
+            <span>Biểu thuế lũy tiến 5 bậc 2026 là gì?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-content" id="faq-1-content" role="region">
+            <div class="faq-body">
+              <p>
+                Theo <strong>Luật Thuế TNCN 2025 (số 109/2025/QH15)</strong>, từ năm 2026 biểu thuế
+                được rút gọn xuống còn <strong>5 bậc</strong> (trước đây là 7 bậc). Thuế được tính
+                <em>lũy tiến từng phần</em> — mỗi đồng thu nhập chỉ bị đánh thuế theo mức của
+                bậc nó rơi vào, không phải áp toàn bộ thu nhập vào một mức.
+              </p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Bậc</th>
+                    <th>Thu nhập tính thuế/tháng</th>
+                    <th>Thuế suất</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>Đến 10.000.000 ₫</td><td>5%</td></tr>
+                  <tr><td>2</td><td>Trên 10 đến 30.000.000 ₫</td><td>10%</td></tr>
+                  <tr><td>3</td><td>Trên 30 đến 60.000.000 ₫</td><td>20%</td></tr>
+                  <tr><td>4</td><td>Trên 60 đến 100.000.000 ₫</td><td>30%</td></tr>
+                  <tr><td>5</td><td>Trên 100.000.000 ₫</td><td>35%</td></tr>
+                </tbody>
+              </table>
+              <p>
+                <strong>Ví dụ:</strong> Thu nhập tính thuế 25 triệu/tháng → 10 triệu × 5% + 15 triệu × 10%
+                = 500.000 + 1.500.000 = <strong>2.000.000 ₫ thuế/tháng</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+          <button
+            class="faq-trigger"
+            aria-expanded="false"
+            aria-controls="faq-2-content"
+          >
+            <span>Nghị định 68/2026 quy định gì cho HKD?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-content" id="faq-2-content" role="region">
+            <div class="faq-body">
+              <p>
+                <strong>Nghị định 68/2026/NĐ-CP</strong> (hiệu lực 05/03/2026) là văn bản quy định
+                chi tiết về nghĩa vụ thuế của hộ kinh doanh theo Luật Thuế TNCN 2025 mới:
+              </p>
+              <ul style="list-style: disc; padding-left: 1.25rem; margin: 0.5rem 0; line-height: 2;">
+                <li><strong>Ngưỡng miễn thuế:</strong> Doanh thu ≤ 500 triệu/năm → không nộp thuế TNCN lẫn GTGT</li>
+                <li><strong>Phương pháp tính:</strong> Tỷ lệ % trên doanh thu (không cần sổ sách kế toán)</li>
+                <li><strong>Ngành dịch vụ (bao gồm vẽ minh họa):</strong> TNCN 2% + GTGT 5%</li>
+                <li><strong>Bãi bỏ thuế khoán và lệ phí môn bài</strong> theo Nghị quyết 198/2025/QH15</li>
+                <li>Doanh thu > 3 tỷ: bắt buộc chuyển sang phương pháp thu nhập (doanh thu − chi phí)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+          <button
+            class="faq-trigger"
+            aria-expanded="false"
+            aria-controls="faq-3-content"
+          >
+            <span>Ngành vẽ minh họa thuộc nhóm thuế nào?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-content" id="faq-3-content" role="region">
+            <div class="faq-body">
+              <p>
+                Hoạt động vẽ minh họa, thiết kế đồ họa, tạo nội dung sáng tạo theo yêu cầu khách hàng
+                thuộc nhóm <strong>"Dịch vụ"</strong> theo Luật Thuế GTGT 2024 và Nghị định 68/2026.
+              </p>
+              <table>
+                <thead>
+                  <tr><th>Loại thuế</th><th>Công thức</th><th>Tỷ lệ</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Thuế TNCN HKD</td><td>(Doanh thu − 500 tr) × 2%</td><td>2%</td></tr>
+                  <tr><td>Thuế GTGT HKD</td><td>Toàn bộ doanh thu × 5%</td><td>5%</td></tr>
+                </tbody>
+              </table>
+              <p style="font-size: 0.8125rem; color: rgba(26,31,54,0.5); margin-top: 0.5rem;">
+                <em>Lưu ý:</em> Nếu bạn bán tác phẩm (NFT, bản quyền gốc) — không phải cung cấp
+                dịch vụ theo hợp đồng — việc phân loại có thể khác. Hãy tham vấn cơ quan thuế
+                địa phương hoặc kế toán chuyên nghiệp.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item">
+          <button
+            class="faq-trigger"
+            aria-expanded="false"
+            aria-controls="faq-4-content"
+          >
+            <span>Tại sao tách lương và freelance lại quan trọng?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-content" id="faq-4-content" role="region">
+            <div class="faq-body">
+              <p><strong>Khi bạn vừa đi làm fulltime vừa nhận freelance, nếu KHÔNG lập HKD:</strong></p>
+              <ul style="list-style: disc; padding-left: 1.25rem; margin: 0.5rem 0; line-height: 2;">
+                <li>Thu nhập freelance bị <strong>cộng dồn vào lương</strong> khi quyết toán cuối năm</li>
+                <li>Tổng thu nhập cao hơn → rơi vào <strong>bậc thuế cao hơn</strong> (20%, 30%, thậm chí 35%)</li>
+                <li>Phần freelance thực tế chịu <strong>thuế suất biên rất cao</strong></li>
+              </ul>
+              <p><strong>Khi lập HKD cho phần freelance:</strong></p>
+              <ul style="list-style: disc; padding-left: 1.25rem; margin: 0.5rem 0; line-height: 2;">
+                <li>Phần freelance <strong>tách riêng</strong>, chỉ chịu 7% cố định (2% TNCN + 5% GTGT)</li>
+                <li>Phần lương vẫn được giảm trừ gia cảnh và chỉ chịu thuế ở <strong>bậc thấp</strong></li>
+                <li>Tổng thuế <strong>giảm đáng kể</strong>, đặc biệt khi freelance &gt; 500 triệu</li>
+              </ul>
+              <p style="font-size:0.8125rem;color:rgba(26,31,54,0.5);margin-top:0.5rem;">
+                Ví dụ: Lương 25 tr/tháng + freelance 600 tr/năm → không HKD đóng ~94 triệu thuế,
+                lập HKD chỉ đóng ~36 triệu — tiết kiệm hơn 58 triệu/năm.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-item">
+          <button
+            class="faq-trigger"
+            aria-expanded="false"
+            aria-controls="faq-5-content"
+          >
+            <span>Khấu trừ 10% tại nguồn là gì?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-content" id="faq-5-content" role="region">
+            <div class="faq-body">
+              <p>
+                Khi bạn ký <strong>hợp đồng dịch vụ</strong> (không phải hợp đồng lao động) với khách hàng,
+                nếu mỗi lần thanh toán <strong>≥ 2 triệu đồng</strong>, khách hàng sẽ giữ lại <strong>10%</strong>
+                để nộp thuế thay cho bạn.
+                <em>(Điều 25, Thông tư 111/2013/TT-BTC)</em>
+              </p>
+              <p style="margin-top:0.75rem;">Số 10% này chỉ là <strong>TẠM THU</strong>. Cuối năm khi quyết toán:</p>
+              <ul style="list-style: none; padding-left: 0; margin: 0.5rem 0; line-height: 2.2;">
+                <li>✅ Thuế thực tế &lt; 10% đã nộp → bạn được <strong style="color:#059669;">HOÀN lại</strong> phần thừa</li>
+                <li>⚠️ Thuế thực tế &gt; 10% đã nộp → bạn phải <strong style="color:#b45309;">NỘP THÊM</strong></li>
+              </ul>
+              <p style="font-size:0.8125rem;color:rgba(26,31,54,0.5);margin-top:0.5rem;">
+                Công cụ này (chế độ Fulltime + Freelance, cột "Không lập HKD") tính toán và hiển thị
+                bạn sẽ hoàn hay nộp thêm bao nhiêu sau khi trừ đi khoản 10% đã bị khấu trừ.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /faq-list -->
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ FOOTER ══ -->
+  <footer
+    style="
+      background-color: var(--color-navy);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    "
+  >
+    <div style="max-width: 640px; margin: 0 auto;">
+      <p
+        style="
+          font-size: 0.75rem;
+          line-height: 1.7;
+          color: rgba(255,255,255,0.55);
+          margin-bottom: 1rem;
+        "
+      >
+        <strong style="color: rgba(255,255,255,0.75);">Lưu ý pháp lý:</strong>
+        Công cụ này chỉ mang tính tham khảo, không thay thế tư vấn thuế chuyên nghiệp.
+        Các công thức tính dựa trên Luật Thuế TNCN 2025 (số 109/2025/QH15),
+        Nghị quyết 110/2025/UBTVQH15, và Nghị định 68/2026/NĐ-CP.
+      </p>
+      <p style="font-size: 0.75rem; color: rgba(255,255,255,0.3);">
+        © 2026 Comicola Legal
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

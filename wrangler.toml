@@ -1,0 +1,9 @@
+name = "comicola-legal"
+compatibility_date = "2024-01-01"
+
+[site]
+bucket = "./dist"
+
+# Custom domain: configure in Cloudflare Dashboard
+# Pages → comicola-legal → Custom domains → Add: legal.comico.la
+# DNS: CNAME  legal  →  comicola-legal.pages.dev
